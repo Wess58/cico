@@ -1,0 +1,54 @@
+.pagination-controls {
+  text-align: center;
+
+  ::ng-deep .ngx-pagination .current {
+    background: #FFA500!important;
+    border: 2px solid #FFA500;
+    border-radius: 4px;
+    color: #fff!important;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding-bottom: 0!important;
+  }
+
+  ::ng-deep .ngx-pagination a {
+    color: #3c4043!important;
+    text-decoration: underline!important;
+    border-radius: 4px!important;
+    margin: 0 10px!important;
+  }
+
+  ::ng-deep .ngx-pagination .pagination-next,
+  ::ng-deep .ngx-pagination .pagination-previous {
+    color: #3c4043;
+
+    ::ng-deep a {
+      margin: 0!important;
+      background-color: #fff;
+      border-radius: 4px;
+      padding-top: 10px!important;
+    }
+  }
+
+  ::ng-deep .ngx-pagination .pagination-next {
+    ::ng-deep a {
+      &::after {
+        margin: 0!important;
+        // content: '›'!important;
+        line-height: 0;
+        // font-size: 2rem!important;
+      }
+    }
+  }
+
+  ::ng-deep .ngx-pagination .pagination-previous {
+    ::ng-deep a {
+      &::after {
+        margin: 0!important;
+        // content: '‹'!important;
+        line-height: 0;
+        // font-size: 2rem!important;
+      }
+    }
+  }
+}

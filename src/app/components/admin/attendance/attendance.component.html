@@ -1,0 +1,88 @@
+<div class="attendance admin">
+  <div class="container">
+
+    <div class="d-flex justify-content-between px-1">
+      <h3 class="page-heading">Attendance</h3>
+      <div class="">
+        <button class="btn btn-add" (click)="exportToExcel()"> <i class="fa-solid fa-download"></i> Download report</button>
+      </div>
+    </div>
+
+    <div class="card white-bg-card">
+
+
+      <div class="filters-container">
+        <span class="filter-text">Filters <i class="fa-solid fa-filter"></i></span>
+        <div class="wrap">
+          <input type="text" class="form-control" name="name" [(ngModel)]="filters.idNumber" (keyup.enter)="getAttendance()" placeholder="Enter ID number" autocomplete="off">
+        </div>
+
+        <div class="wrap">
+          <input onfocus="(this.type='date')" onblur="(this.type='text')" class="form-control" name="date" [(ngModel)]="filters.date" (change)="getAttendance()" placeholder="Enter date" autocomplete="off">
+        </div>
+
+        <div class="wrap">
+          <select class="form-control" name="status" [(ngModel)]="filters.status" (change)="getAttendance()">
+            <option value="">All statuses</option>
+            <option value="CHECK_IN">Check in</option>
+            <option value="CHECK_OUT">Check out</option>
+          </select>
+        </div>
+        <div class="wrap">
+          <button class="btn btn-search" (click)="getAttendance()"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+          <button class="btn btn-clear" (click)="clearFilters()"><u>Clear</u></button>
+        </div>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th col="colspan">Name</th>
+            <th col="colspan">ID number</th>
+            <th col="colspan">Phone number</th>
+            <th col="colspan">Current status</th>
+            <th col="colspan">Check-In</th>
+            <th col="colspan">Check-Out</th>
+            <th col="colspan">Date</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="attendanceList.length && !loadAttendance" [@fadeIn]>
+          <tr *ngFor="let attendance of attendanceList | paginate: { itemsPerPage, currentPage: page, totalItems };index as i ">
+            <td>{{attendance.user?.name}}</td>
+            <td>
+              <span class="redirect-link" (click)="filters.idNumber = attendance.user?.idNumber;getAttendance()">
+                {{attendance.user?.idNumber}}
+              </span>
+            </td>
+            <td> {{attendance.user?.phoneNumber}} </td>
+            <td>
+              <span class="font-weight-bold" [ngClass]="attendance.status === 'CHECK_IN' ? 'green-text' : 'red-text'">{{attendance.status.replace('_',' ')}}</span>
+            </td>
+            <td>{{attendance.checkInTime | shortTime}}</td>
+            <td>{{attendance.checkOutTime | shortTime}}</td>
+            <td>{{attendance.date === today ? 'Today' : attendance.date | date : 'MMM d, y'}}</td>
+          </tr>
+        </tbody>
+
+      </table>
+
+
+      <div class="text-center my-5" *ngIf="!attendanceList.length && !loadAttendance" [@fadeIn]>
+        <span class="text-muted">No attendance yet for the selected date</span>
+      </div>
+
+
+      <div class="wrapper" *ngIf="loadAttendance" [@fadeIn]>
+        <div class="spinner"></div>
+      </div>
+
+
+      <div class="pagination-controls">
+        <pagination-controls (pageChange)="getAttendance((page = $event),'reload')" [maxSize]="7" [directionLinks]="true" [autoHide]="true" [responsive]="true" previousLabel="" nextLabel="">
+        </pagination-controls>
+      </div>
+    </div>
+
+  </div>
+
+</div>

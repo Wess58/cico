@@ -1,0 +1,153 @@
+<div class="users admin">
+  <div class="container">
+
+    <div class="d-flex justify-content-between">
+      <h3 class="page-heading">Users</h3>
+      <div class="">
+        <button class="btn btn-add" data-toggle="modal" data-target="#addUserModal"> <i class="fa-solid fa-plus"></i> Add user</button>
+      </div>
+    </div>
+
+    <div class="card white-bg-card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th col="colspan">Name</th>
+            <th col="colspan">ID number</th>
+            <th col="colspan">Phone number</th>
+            <th col="colspan">Email</th>
+            <th col="colspan">Gender</th>
+            <th col="colspan">Role</th>
+            <th col="colspan">Action</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="users.length && !loadUsers" [@fadeIn]>
+          <tr *ngFor="let user of users | paginate: { itemsPerPage, currentPage: page, totalItems };index as i ">
+            <td>{{user.name}}</td>
+            <td>
+              <span class="redirect-link">
+                {{user.idNumber}}
+              </span>
+            </td>
+            <td>{{user.phoneNumber}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.gender}}</td>
+            <td>
+              <span class="role" [ngClass]="user.role === 'ADMIN' ? 'orange-text' : 'green-text'">
+                {{user.role}}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-action mr-2" data-toggle="modal" data-target="#addUserModal" (click)="selectUser(user)"> edit </button>
+              <button class="btn btn-delete" data-toggle="modal" data-target="#deleteUserModal" (click)="selectUser(user)"> delete </button>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+
+
+      <div class="wrapper" *ngIf="loadUsers" [@fadeIn]>
+        <div class="spinner"></div>
+      </div>
+
+
+      <!-- <div class="pagination-controls">
+        <pagination-controls (pageChange)="loadPage($event)" [maxSize]="7" [directionLinks]="true" [autoHide]="true" [responsive]="true" previousLabel="" nextLabel="">
+        </pagination-controls>
+      </div> -->
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+<!-- add user Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add new user</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close-modal">
+          <!-- <span aria-hidden="true">&times;</span> -->
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+
+          <div class="form-group col-md-6">
+            <label for="">Full name</label>
+            <input type="text" class="form-control" name="name" [(ngModel)]="user.name" placeholder="Enter full name" autocomplete="off">
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="idNumber">ID number</label>
+            <input type="text" class="form-control" name="idNumber" [(ngModel)]="user.idNumber" maxlength="8" placeholder="Enter ID number" pattern="[0-9]*" inputmode="numeric"
+              oninput="this.value = this.value.replace(/[^0-9\.]/g, '').replace(/^0+(?!$)/,'').replace(/(\.*)\./g, '$1');" autocomplete="off">
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="phoneNumber">Phone number</label>
+            <input type="text" class="form-control" name="phoneNumber" [(ngModel)]="user.phoneNumber" placeholder="Enter phone number" pattern="[0-9]*" inputmode="numeric"
+              oninput="this.value = this.value.replace(/[^0-9\.]/g, '').replace(/(\..*)\./g, '$1');" autocomplete="off">
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" name="email" [(ngModel)]="user.email" placeholder="Enter email" autocomplete="off">
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="gender">Gender</label>
+            <select class="form-control" name="gender" [(ngModel)]="user.gender">
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="role">Role</label>
+            <select class="form-control" name="role" [(ngModel)]="user.role">
+              <option value="ADMIN">Admin</option>
+              <option value="USER">User</option>
+            </select>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-submit" data-dismiss="modal" (click)="!submitting && ( user.id ? editUser() :addUser())"> <i class="fa-solid fa-spinner fa-spin-pulse fa-lg mr-2 d-inline-block" *ngIf="submitting"></i>
+          {{ submitting ? 'Submitting' : 'Submit'}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- delete item Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete user</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close-modal">
+          <!-- <span aria-hidden="true">&times;</span> -->
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete user <strong>{{user?.name}}</strong> </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-delete" data-dismiss="modal" (click)="deleteUser()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

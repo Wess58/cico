@@ -1,0 +1,151 @@
+.cico {
+  .keypad-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    .description {
+      margin-bottom: 10px;
+      color: #5f6063;
+    }
+
+    .input-display {
+      width: 400px;
+      border: 2px solid #3c4043;
+      border-radius: 20px;
+      height: 80px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #3c4043;
+      font-size: 30px;
+      font-weight: 600;
+      letter-spacing: 5px;
+      transition: all 0.3s;
+
+      span {
+        margin-left: -3px;
+        margin-top: -5px;
+        color: #80868b;
+      }
+    }
+
+    .keypad-num {
+      width: 400px;
+
+      button {
+        border-radius: 18px;
+        height: 80px;
+        width: 100%;
+        margin-bottom: 20px;
+        // text-shadow: 2px 2px 3px rgba(0,0,0,0.2);
+        font-size: 20px;
+        box-shadow: -6px -6px 26px rgba(255,255,255,0.9), 5px 5px 15px rgba(0,0,0,.05), 5px 10px 35px rgba(0,0,0,.1), inset -2px -2px 2px rgba(0,0,0,.1), inset -1px -1px 3px rgba(255,255,255,.6), inset 2px 2px 8px rgba(255,255,255,.2), inset 1px 1px 8px rgba(255,255,255,.2), -6px -6px 26px rgba(255,255,255,.8);
+        background-color: #e9e9ef;
+        border: 0;
+        transition: 200ms ease-out;
+        cursor: pointer;
+        font-weight: 600;
+
+        &:active,
+        &:hover {
+          box-shadow: 4px 4px 6px rgba(0,0,0,.1), 5px 50px 35px rgba(0,0,0,.1), 8px 5px 25px rgba(0,0,0,.1), inset -1px -1px 9px rgba(0,0,0,.2), inset -1px -1px 3px rgba(255,255,255,.6), inset 1px 1px 8px rgba(255,255,255,1), inset 4px 4px 24px rgba(0,0,0,.15), -5px -5px 15px rgba(255,255,255,.9);
+          // transform: scale(.98);
+        }
+      }
+    }
+
+    .user-card {
+      width: 400px;
+      box-shadow: 5px 20px 20px 2px rgba(0,0,0,0.1);
+      padding: 20px;
+      border-radius: 20px;
+
+      h3 {
+        font-weight: 600;
+        color: #3c4043;
+      }
+
+      .role-badge {
+        font-size: 10px !important;
+        padding: 7px 15px;
+        border-radius: 20px;
+        font-weight: 600!important;
+        display: inline-block;
+      }
+
+      .badge-green {
+        background-color: #84bd00;
+      }
+
+      .badge-orange {
+        background-color: #FFA500;
+      }
+
+      .user-id {
+        font-size: 1rem;
+        display: block;
+        color: #5f6063;
+        margin-bottom: 5px;
+        margin-left: 4px;
+      }
+
+      .user-phone {
+        font-size: 0.9rem;
+        display: block;
+        color: #80868b;
+        margin-left: 4px;
+      }
+
+      .btn-proceed-cico {
+        color: #fff;
+        margin: 30px 0 20px;
+        border-radius: 30px;
+        padding: 9px;
+      }
+
+      .btn-check-in {
+        background-color: #84bd00;
+      }
+
+      .btn-check-out {
+        background-color: #d11a2a;
+      }
+    }
+  }
+}
+
+.alert-card{
+  width: 400px;
+}
+
+.orange-border {
+  border-color: #FFA500!important;
+  transition: all 0.3s;
+}
+
+.green-border {
+  border-color: #84bd00!important;
+  transition: all 0.3s;
+}
+
+.red-border {
+  border-color: #d11a2a!important;
+  border-width: 4px!important;
+  transition: all 0.3s;
+}
+
+.dormant-key {
+  box-shadow: -6px -6px 26px rgba(255,255,255,0.9), 5px 5px 15px rgba(0,0,0,.05), 5px 10px 35px rgba(0,0,0,.1), inset -2px -2px 2px rgba(0,0,0,.1), inset -1px -1px 3px rgba(255,255,255,.6), inset 2px 2px 8px rgba(255,255,255,.2), inset 1px 1px 8px rgba(255,255,255,.2), -6px -6px 26px rgba(255,255,255,.8)!important;
+}
+@media only screen and (max-width: 770px) {
+  .input-display,
+  .keypad-num,
+  .user-card,
+  .alert-card {
+    width: 86vw!important;
+  }
+}

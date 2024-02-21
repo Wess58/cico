@@ -1,0 +1,62 @@
+<div class="cico">
+  <div class="container">
+
+    <div class="keypad-area">
+      <span class="description">Enter Your ID Number</span>
+      <div class="input-display" [ngClass]="{'orange-border':idNumber.length,'red-border':notFound,'green-border':user?.id}">
+        {{idNumber}}
+        <!-- <span class="font-weight-normal">|</span> -->
+      </div>
+
+      <div class="loading-wrap" [ngClass]="{'show-message':showLoader || notFound}">
+        <span class="loading-text orange-text" *ngIf="showLoader" [@fadeIn]><i class="fa-solid fa-spinner fa-spin-pulse fa-lg mr-2 d-inline-block"></i> Loading</span>
+        <span class="loading-text red-text" *ngIf="notFound" [@fadeIn]><i class="fa-solid fa-face-frown fa-xl d-block mb-3"></i> This account could not be found , please check the ID number and try again!</span>
+      </div>
+
+
+      <div *ngIf="!successToCICO && !failedToCICO" [@fadeIn]>
+        <div class="keypad-num" *ngIf="!user?.id" [@fadeIn]>
+          <div class="row">
+            <div class="col-4" *ngFor="let key of keys;index as i">
+              <button [ngClass]="{'dormant-key':key === 'empty'}" (click)="(key === 'delete' || (idNumber.length <= 7 && key !== 'empty')) && pickDigit(key)"
+                [disabled]="key === 'delete' && !idNumber.length">{{key === 'delete' || key === 'empty' ? '' : key}}
+                <span *ngIf="key === 'delete'"><i class="fa-solid fa-delete-left"></i></span>
+              </button>
+              <!-- [hidden]="key === 'empty'" -->
+            </div>
+          </div>
+        </div>
+
+        <div class="card user-card" *ngIf="(user?.id && !showLoader)">
+          <div class="d-flex justify-content-between">
+            <h3>{{user.name}}</h3>
+            <div class="">
+              <span class="role-badge" [ngClass]="user.role === 'ADMIN' ? 'badge-orange' : 'badge-green'">{{user.role}}</span>
+            </div>
+          </div>
+          <span class="user-id">{{user.idNumber}}</span>
+          <span class="user-phone">{{user.phoneNumber | maskNumber}}</span>
+
+          <button class="btn btn-proceed-cico" [ngClass]="status === 'CHECK_IN' ? 'btn-check-out' : 'btn-check-in'" (click)="proceedToCICO()">
+            Proceed <span *ngIf="status">to {{status === 'CHECK_IN' ? 'Check-out' : 'Check-in'}}</span>
+          </button>
+        </div>
+
+      </div>
+
+
+
+      <div class="alert alert-card my-5" *ngIf="successToCICO || failedToCICO" [@fadeIn] [ngClass]="successToCICO ? 'alert-success' : 'alert-success'">
+        <span>You are successfully <strong>Checked {{status === 'CHECK_IN' ? 'in' : 'out' }}</strong>!</span>
+      </div>
+
+      <!-- <div class="wrapper" *ngIf="showLoader" [@fadeIn]>
+        <div class="spinner"></div>
+        <span class="loading-text">Loading</span>
+      </div> -->
+
+    </div>
+
+  </div>
+
+</div>
