@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { ApiService } from "../../../services/api.service";
 import exportFromJSON from 'export-from-json';
@@ -32,11 +33,14 @@ export class AttendanceComponent implements OnInit {
 
 
   constructor(
-    private apiService: ApiService
+    private apiService: ApiService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     window.scroll(0, 0);
+    this.filters.idNumber = this.activatedRoute.snapshot.queryParams['idNumber'] ?? '';
     this.getAttendance();
   }
 
@@ -89,7 +93,7 @@ export class AttendanceComponent implements OnInit {
         gender: attendance.user.gender,
         status: attendance.status,
         check_in: attendance.checkInTime ?.substring(0, 5) ?? '-' ,
-        check_out: attendance.checkOutTime?.substring(0, 5) ?? '-',
+        check_out: attendance.checkOutTime ?.substring(0, 5) ?? '-',
         date: attendance.date
       }
 

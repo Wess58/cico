@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between">
       <h3 class="page-heading">Users</h3>
       <div class="">
-        <button class="btn btn-add" data-toggle="modal" data-target="#addUserModal"> <i class="fa-solid fa-plus"></i> Add user</button>
+        <button class="btn btn-add" data-toggle="modal" data-target="#addUserModal" (click)="resetUser()"> <i class="fa-solid fa-plus"></i> Add user</button>
       </div>
     </div>
 
@@ -25,7 +25,7 @@
           <tr *ngFor="let user of users | paginate: { itemsPerPage, currentPage: page, totalItems };index as i ">
             <td>{{user.name}}</td>
             <td>
-              <span class="redirect-link">
+              <span class="redirect-link" [routerLink]="'/admin/attendance'" [queryParams]="{ idNumber:user.idNumber}">
                 {{user.idNumber}}
               </span>
             </td>

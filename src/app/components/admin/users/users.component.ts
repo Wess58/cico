@@ -51,7 +51,7 @@ export class UsersComponent implements OnInit {
         setTimeout(() => {
           this.loadUsers = false;
           this.users = res.body ?? [];
-        }, 3000);
+        }, 2500);
       }
     )
   }
@@ -62,10 +62,7 @@ export class UsersComponent implements OnInit {
     this.user.password = this.user.role === 'ADMIN' ? this.user.idNumber + this.user.phoneNumber : null;
     this.apiService.createUser(this.user).subscribe(
       (res: any) => {
-        this.user = {
-          gender: 'MALE',
-          role: 'USER'
-        };
+        this.resetUser();
         this.submitting = false;
 
         this.getUsers();
@@ -77,10 +74,7 @@ export class UsersComponent implements OnInit {
     this.submitting = true;
     this.apiService.editUser(this.user).subscribe(
       (res: any) => {
-        this.user = {
-          gender: 'MALE',
-          role: 'USER'
-        };
+        this.resetUser();
         this.submitting = false;
         this.getUsers();
       }
@@ -95,13 +89,17 @@ export class UsersComponent implements OnInit {
   deleteUser(): void {
     this.apiService.deleteUser(this.user.idNumber).subscribe(
       (res: any) => {
-        this.user = {
-          gender: 'MALE',
-          role: 'USER'
-        };
+        this.resetUser();
         this.getUsers();
       }
     )
+  }
+
+  resetUser():void{
+    this.user = {
+      gender: 'MALE',
+      role: 'USER'
+    };
   }
 
 
