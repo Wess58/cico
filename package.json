@@ -21,6 +21,8 @@
     "@fortawesome/fontawesome-free": "^6.5.1",
     "bootstrap": "4.6",
     "export-from-json": "^1.7.4",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "ngx-pagination": "^6.0.3",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

@@ -1,0 +1,17 @@
+<nav class="navbar navbar-expand-lg fixed-top">
+  <a class="navbar-brand">
+    <img src="assets/images/logo.png" alt="logo">
+    <img src="assets/images/logo-wordmark.png" alt="logo">
+
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link active" [routerLink]="'/'">Clock <span class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" [routerLink]="'admin/attendance'">Attendance</a>
+      <a class="nav-item nav-link" [routerLink]="'admin/users'">Users</a>
+    </div>
+  </div>
+</nav>

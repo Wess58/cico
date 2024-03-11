@@ -17,6 +17,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import { NgmodelDebounceDirective } from './directives/ngmodel-debounce.directive';
 import { ShortTimePipe } from './pipes/short-time.pipe';
 import { MaskNumberPipe } from './pipes/mask-number.pipe';
+import { NavbarComponent } from './layouts/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { MaskNumberPipe } from './pipes/mask-number.pipe';
     AttendanceComponent,
     NgmodelDebounceDirective,
     ShortTimePipe,
-    MaskNumberPipe
+    MaskNumberPipe,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

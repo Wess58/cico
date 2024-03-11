@@ -4,11 +4,12 @@
     <div class="d-flex justify-content-between px-1">
       <h3 class="page-heading">Attendance</h3>
       <div class="">
-        <button class="btn btn-add" (click)="exportToExcel()"> <i class="fa-solid fa-download"></i> Download report</button>
+        <button class="btn btn-add" (click)="exportToPDF()"> <i class="fa-solid fa-download"></i> Download report</button>
       </div>
     </div>
 
     <div class="card white-bg-card">
+
 
 
       <div class="filters-container">
@@ -34,12 +35,12 @@
         </div>
       </div>
 
-      <table class="table">
+      <table class="table" id="content">
         <thead>
           <tr>
             <th col="colspan">Name</th>
-            <th col="colspan">ID number</th>
-            <th col="colspan">Phone number</th>
+            <th col="colspan" *ngIf="!hideColumns" [@fadeIn]>ID number</th>
+            <th col="colspan" *ngIf="!hideColumns" [@fadeIn]>Phone number</th>
             <th col="colspan">Current status</th>
             <th col="colspan">Check-In</th>
             <th col="colspan">Check-Out</th>
@@ -49,12 +50,12 @@
         <tbody *ngIf="attendanceList.length && !loadAttendance" [@fadeIn]>
           <tr *ngFor="let attendance of attendanceList | paginate: { itemsPerPage, currentPage: page, totalItems };index as i ">
             <td>{{attendance.user?.name}}</td>
-            <td>
+            <td *ngIf="!hideColumns" [@fadeIn]>
               <span class="redirect-link" (click)="filters.idNumber = attendance.user?.idNumber;getAttendance()">
                 {{attendance.user?.idNumber}}
               </span>
             </td>
-            <td> {{attendance.user?.phoneNumber}} </td>
+            <td *ngIf="!hideColumns" [@fadeIn]> {{attendance.user?.phoneNumber}} </td>
             <td>
               <span class="font-weight-bold" [ngClass]="attendance.status === 'CHECK_IN' ? 'green-text' : 'red-text'">{{attendance.status.replace('_',' ')}}</span>
             </td>

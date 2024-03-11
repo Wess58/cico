@@ -30,6 +30,8 @@ export class UsersComponent implements OnInit {
   totalItems: number = 0;
   submitting = false;
   loadUsers = false;
+  emailInvalid = false;
+  idInvalid = false;
 
 
   constructor(
@@ -60,6 +62,8 @@ export class UsersComponent implements OnInit {
     this.submitting = true;
 
     this.user.password = this.user.role === 'ADMIN' ? this.user.idNumber + this.user.phoneNumber : null;
+    this.user.name = this.user.firstName + " " + this.user.lastName;
+
     this.apiService.createUser(this.user).subscribe(
       (res: any) => {
         this.resetUser();
@@ -81,9 +85,20 @@ export class UsersComponent implements OnInit {
     )
   }
 
+  validateEmail(): void {
+    /\S+@\S+\.\S+/.test(this.user.email) ? (this.emailInvalid = false) : (this.emailInvalid = true);
+  }
+
+  validateId(): void {
+    this.idInvalid = this.user ?.idNumber ?.length < 7;
+  }
+
 
   selectUser(user: any): void {
     this.user = Object.assign({}, user);
+    const names: any = this.user.name.split(' ');
+    this.user.firstName = names[0];
+    this.user.lastName = names[1];
   }
 
   deleteUser(): void {
@@ -95,7 +110,7 @@ export class UsersComponent implements OnInit {
     )
   }
 
-  resetUser():void{
+  resetUser(): void {
     this.user = {
       gender: 'MALE',
       role: 'USER'

@@ -4,6 +4,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { ApiService } from "../../../services/api.service";
 import exportFromJSON from 'export-from-json';
+import jsPDF from "jspdf";
+import autoTable from 'jspdf-autotable'
+
+
 
 @Component({
   selector: 'app-attendance',
@@ -30,6 +34,7 @@ export class AttendanceComponent implements OnInit {
     status: ''
   }
   today = new Date().toISOString().slice(0, 10);
+  hideColumns = false;
 
 
   constructor(
@@ -63,7 +68,7 @@ export class AttendanceComponent implements OnInit {
         page ? window.scroll(0, 0) : '';
         this.totalItems = Number(res.headers.get('X-Total-Count'));
         this.loadAttendance = false;
-        this.attendanceList = res.body ?? [];
+        this.attendanceList = res.body.filter((obj: any) => { return obj?.user?.name }) ?? [];
 
       },
       (error: any) => {
@@ -103,6 +108,30 @@ export class AttendanceComponent implements OnInit {
     const exportType = exportFromJSON.types.xls;
 
     exportFromJSON({ data, fileName, exportType });
+  }
+
+  exportToPDF(): void {
+
+    this.hideColumns = true;
+
+    setTimeout(() => {
+      let doc = new jsPDF();
+
+      autoTable(
+        doc,
+        {
+          html: '#content',
+          theme: 'grid'
+        });
+      doc.save(this.today + '-attendance-report');
+
+      doc = new jsPDF();
+      this.hideColumns = false;
+
+
+    }, 10);
+
+
   }
 
 
