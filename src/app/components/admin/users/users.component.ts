@@ -32,6 +32,7 @@ export class UsersComponent implements OnInit {
   loadUsers = false;
   emailInvalid = false;
   idInvalid = false;
+  phoneInvalid = false;
 
 
   constructor(
@@ -76,6 +77,8 @@ export class UsersComponent implements OnInit {
 
   editUser(): void {
     this.submitting = true;
+    this.user.name = this.user.firstName + " " + this.user.lastName;
+
     this.apiService.editUser(this.user).subscribe(
       (res: any) => {
         this.resetUser();
@@ -90,7 +93,11 @@ export class UsersComponent implements OnInit {
   }
 
   validateId(): void {
-    this.idInvalid = this.user ?.idNumber ?.length < 7;
+    this.idInvalid = this.user ?.idNumber ?.length < 8;
+  }
+
+  validatedPhoneNumber(): void {
+    this.phoneInvalid = this.user ?.phoneNumber ?.length < 12;
   }
 
 
