@@ -25,11 +25,13 @@
       font-weight: 600;
       letter-spacing: 5px;
       transition: all 0.3s;
+      position: relative;
 
       span {
-        margin-left: -3px;
-        margin-top: -5px;
         color: #80868b;
+        position: absolute;
+        right: 10px;
+        cursor: pointer;
       }
     }
 

@@ -5,7 +5,7 @@
       <span class="description">Enter Your ID Number</span>
       <div class="input-display" [ngClass]="{'orange-border':idNumber.length,'red-border':notFound,'green-border':user?.id}">
         {{idNumber}}
-        <!-- <span class="font-weight-normal">|</span> -->
+        <span class="delete-id" (click)="idNumber = ''" [hidden]="!idNumber.length" [@fadeIn]><i class="fa-solid fa-circle-xmark"></i></span>
       </div>
 
       <div class="loading-wrap" [ngClass]="{'show-message':showLoader || notFound}">
