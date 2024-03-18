@@ -13,25 +13,30 @@
         <thead>
           <tr>
             <th col="colspan">Name</th>
-            <th col="colspan">ID number</th>
             <th col="colspan">Phone number</th>
             <th col="colspan">Email</th>
             <th col="colspan">Gender</th>
+            <th col="colspan">Department</th>
             <th col="colspan">Role</th>
             <th col="colspan">Action</th>
           </tr>
         </thead>
         <tbody *ngIf="users.length && !loadUsers" [@fadeIn]>
           <tr *ngFor="let user of users | paginate: { itemsPerPage, currentPage: page, totalItems };index as i ">
-            <td>{{user.name}}</td>
             <td>
+              <span class="d-block mb-1">
+                {{user.name}}
+              </span>
+
               <span class="redirect-link" [routerLink]="'/admin/attendance'" [queryParams]="{ idNumber:user.idNumber}">
                 {{user.idNumber}}
               </span>
             </td>
+
             <td>{{user.phoneNumber}}</td>
             <td>{{user.email}}</td>
             <td>{{user.gender}}</td>
+            <td>{{user.department}}</td>
             <td>
               <span class="role" [ngClass]="user.role === 'ADMIN' ? 'orange-text' : 'green-text'">
                 {{user.role}}
@@ -39,7 +44,7 @@
             </td>
             <td>
               <button class="btn btn-action mr-2" data-toggle="modal" data-target="#addUserModal" (click)="selectUser(user)"> edit </button>
-              <button class="btn btn-delete" data-toggle="modal" data-target="#deleteUserModal" (click)="selectUser(user)"> delete </button>
+              <button class="btn btn-delete" title="Delete user" data-toggle="modal" data-target="#deleteUserModal" (click)="selectUser(user)"> <i class="fa-solid fa-trash-can"></i> </button>
             </td>
 
           </tr>
@@ -115,6 +120,20 @@
           </div>
 
           <div class="form-group col-md-6">
+            <label for="role">Department</label>
+            <select class="form-control" name="role" [(ngModel)]="user.department">
+              <option value="null" hidden>Select a department</option>
+              <option value="IT">IT</option>
+              <option value="ACCOUNTS">Accounts</option>
+              <option value="SALES_MARKETING">Sales and marketing</option>
+              <option value="BANQUET">Banquet</option>
+              <option value="KITCHEN">Kitchen</option>
+              <option value="HOUSE_KEEPING">House-keeping</option>
+
+            </select>
+          </div>
+
+          <div class="form-group col-md-6">
             <label for="role">Role</label>
             <select class="form-control" name="role" [(ngModel)]="user.role">
               <option value="ADMIN">Admin</option>
@@ -127,8 +146,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-cancel" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-submit" data-dismiss="modal" [disabled]="!user.firstName || !user.lastName || !user.phoneNumber || !user.email || idInvalid || emailInvalid || phoneInvalid" (click)="!submitting && ( user.id ? editUser() :addUser())"> <i
-            class="fa-solid fa-spinner fa-spin-pulse fa-lg mr-2 d-inline-block" *ngIf="submitting"></i>
+        <button type="button" class="btn btn-submit" data-dismiss="modal" [disabled]="!user.firstName || !user.lastName || !user.phoneNumber || !user.email || idInvalid || emailInvalid || phoneInvalid"
+          (click)="!submitting && ( user.id ? editUser() :addUser())"> <i class="fa-solid fa-spinner fa-spin-pulse fa-lg mr-2 d-inline-block" *ngIf="submitting"></i>
           {{ submitting ? 'Submitting' : 'Submit'}}</button>
       </div>
     </div>

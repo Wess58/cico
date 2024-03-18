@@ -23,7 +23,8 @@ export class UsersComponent implements OnInit {
   users: Array<any> = [];
   user: any = {
     gender: 'MALE',
-    role: 'USER'
+    role: 'USER',
+    department: 'ACCOUNTS'
   };
   itemsPerPage: number = 10;
   page: number = 1;
@@ -120,7 +121,8 @@ export class UsersComponent implements OnInit {
   resetUser(): void {
     this.user = {
       gender: 'MALE',
-      role: 'USER'
+      role: 'USER',
+      department: 'ACCOUNTS'
     };
   }
 
