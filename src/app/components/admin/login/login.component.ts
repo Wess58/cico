@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
       (res: any) => {
         // console.log(res);
         if (res.body && res.body.password === this.form.password) {
-          localStorage.setItem('tkn', 'loggedIn');
+          localStorage.setItem('tkn', res.body.idNumber);
           this.router.navigate(['/admin/attendance']);
 
           setTimeout(() => {

@@ -35,6 +35,7 @@ export class UsersComponent implements OnInit {
   emailInvalid = false;
   idInvalid = false;
   phoneInvalid = false;
+  isLoggedInUser = false;
 
 
   constructor(
@@ -99,7 +100,9 @@ export class UsersComponent implements OnInit {
   }
 
   validateEmail(): void {
-    /\S+@\S+\.\S+/.test(this.user.email) ? (this.emailInvalid = false) : (this.emailInvalid = true);
+    if (this.user?.email?.length) {
+      /\S+@\S+\.\S+/.test(this.user.email) ? (this.emailInvalid = false) : (this.emailInvalid = true);
+    }
   }
 
   validateId(): void {
@@ -116,6 +119,8 @@ export class UsersComponent implements OnInit {
     const names: any = this.user.name.split(' ');
     this.user.firstName = names[0];
     this.user.lastName = names[1];
+    this.isLoggedInUser = localStorage.getItem('tkn') === this.user.idNumber;
+
   }
 
   deleteUser(): void {
