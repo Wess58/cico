@@ -100,7 +100,7 @@ export class UsersComponent implements OnInit {
   }
 
   validateEmail(): void {
-    if (this.user?.email?.length) {
+    if (this.user ?.email ?.length) {
       /\S+@\S+\.\S+/.test(this.user.email) ? (this.emailInvalid = false) : (this.emailInvalid = true);
     }
   }
@@ -133,6 +133,8 @@ export class UsersComponent implements OnInit {
   }
 
   resetUser(): void {
+    this.isLoggedInUser = false;
+    
     this.user = {
       gender: 'MALE',
       role: 'USER',
