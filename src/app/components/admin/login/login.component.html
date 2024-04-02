@@ -1,1 +1,45 @@
-<p>login works!</p>
+<div class="login">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 p-0">
+
+        <div class="logo-holder">
+          <div>
+            <img src="assets/images/logo.png" alt="logo">
+            <img src="assets/images/logo-wordmark.png" alt="logo">
+          </div>
+        </div>
+
+      </div>
+      <div class="col-md-6 p-0">
+
+        <div class="form">
+          <div class="full-width">
+
+            <h3>Login</h3>
+
+            <div class="alert alert-danger" *ngIf="notFound" [@fadeIn]>
+              Login failed ! Please try again.
+            </div>
+
+            <div class="form-group">
+              <label for="">ID Number</label>
+              <input type="text" class="form-control" [(ngModel)]="form.idNumber">
+            </div>
+
+            <div class="form-group position-relative">
+              <label for="">Password</label>
+              <input [type]="showPassword ? 'text' : 'password'" class="form-control" [(ngModel)]="form.password">
+              <span class="password-toggle" (click)="togglePassword()"><i class="fa-solid" [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"></i></span>
+            </div>
+
+            <button class="btn btn-login" (click)="getCurrentUser()">Login</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

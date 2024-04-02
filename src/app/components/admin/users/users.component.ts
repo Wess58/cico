@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { ApiService } from "../../../services/api.service";
 
@@ -37,13 +38,21 @@ export class UsersComponent implements OnInit {
 
 
   constructor(
-    private apiService: ApiService
+    private apiService: ApiService,
+    private router: Router
+
   ) { }
+
 
   ngOnInit(): void {
     window.scroll(0, 0);
+    if (!localStorage.getItem('tkn')) {
+      // localStorage.setItem('url', this.router.url);
+      this.router.navigate(['/admin/login']);
+    } else {
+      this.getUsers();
+    }
     // this.testUsers();
-    this.getUsers();
   }
 
   getUsers(): void {

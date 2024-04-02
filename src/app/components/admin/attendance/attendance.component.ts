@@ -45,8 +45,13 @@ export class AttendanceComponent implements OnInit {
 
   ngOnInit(): void {
     window.scroll(0, 0);
-    this.filters.idNumber = this.activatedRoute.snapshot.queryParams['idNumber'] ?? '';
-    this.getAttendance();
+    if (!localStorage.getItem('tkn')) {
+      // localStorage.setItem('url', this.router.url);
+      this.router.navigate(['/admin/login']);
+    } else {
+      this.filters.idNumber = this.activatedRoute.snapshot.queryParams['idNumber'] ?? '';
+      this.getAttendance();
+    }
   }
 
   getAttendance(page?: any, reload?: string): void {
@@ -68,7 +73,7 @@ export class AttendanceComponent implements OnInit {
         page ? window.scroll(0, 0) : '';
         this.totalItems = Number(res.headers.get('X-Total-Count'));
         this.loadAttendance = false;
-        this.attendanceList = res.body.filter((obj: any) => { return obj?.user?.name }) ?? [];
+        this.attendanceList = res.body.filter((obj: any) => { return obj ?.user ?.name }) ?? [];
 
       },
       (error: any) => {
@@ -115,14 +120,24 @@ export class AttendanceComponent implements OnInit {
     this.hideColumns = true;
 
     setTimeout(() => {
-      let doc = new jsPDF();
+      let doc: any = new jsPDF();
+
+      const img:any = new Image();
+      img.src = 'assets/images/logo-wordmark.png';
+      doc.addImage(img, 'png', 14, 2, 30,10)
+      doc.setFontSize(14);
+      doc.text(14, 20, 'NON-CONTRACTORS ATTENDANCE REPORT');
 
       autoTable(
         doc,
         {
+          startY: 25,
           html: '#content',
+          headStyles :{fillColor : [2, 8, 110]},
           theme: 'grid'
         });
+
+
       doc.save(this.today + '-attendance-report');
 
       doc = new jsPDF();

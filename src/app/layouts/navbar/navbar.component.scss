@@ -10,7 +10,7 @@
     }
   }
 
-  .fa-bars-staggered{
+  .fa-bars-staggered {
     color: #fff;
   }
 
@@ -22,8 +22,22 @@
     padding-bottom: 4px!important;
     border-bottom: 2px solid #02086e;
 
-    &:hover{
+    &:hover {
       border-bottom: 2px solid #fff;
+    }
+  }
+
+  .nav-link-log-out {
+    border-left: 2px solid #fff;
+    padding-left: 30px;
+
+    &:hover {
+      border-bottom: 2px solid #02086e;
+    }
+
+    i {
+      margin-left: 10px;
+      font-size: 0.8rem;
     }
   }
 }
