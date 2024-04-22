@@ -4,6 +4,8 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { ApiService } from "../../../services/api.service";
+import jsPDF from "jspdf";
+import autoTable from 'jspdf-autotable'
 
 @Component({
   selector: 'app-users',
@@ -36,6 +38,8 @@ export class UsersComponent implements OnInit {
   idInvalid = false;
   phoneInvalid = false;
   isLoggedInUser = false;
+  today = new Date().toISOString().slice(0, 10);
+  hideColumns = false;
 
 
   constructor(
@@ -134,7 +138,7 @@ export class UsersComponent implements OnInit {
 
   resetUser(): void {
     this.isLoggedInUser = false;
-    
+
     this.user = {
       gender: 'MALE',
       role: 'USER',
@@ -160,6 +164,40 @@ export class UsersComponent implements OnInit {
     // make API call
     // res.headers
     // this.totalItems = Number(headers.get('X-Total-Count'));
+
+  }
+
+  exportToPDF(): void {
+
+    this.hideColumns = true;
+
+    setTimeout(() => {
+      let doc: any = new jsPDF();
+
+      const img:any = new Image();
+      img.src = 'assets/images/logo-wordmark.png';
+      doc.addImage(img, 'png', 14, 2, 30,10)
+      doc.setFontSize(14);
+      doc.text(14, 20, 'NON-CONTRACTORS WORKING HOURS REPORT');
+
+      autoTable(
+        doc,
+        {
+          startY: 25,
+          html: '#content',
+          headStyles :{fillColor : [2, 8, 110]},
+          theme: 'grid'
+        });
+
+
+      doc.save(this.today + '-working-hours-report');
+
+      doc = new jsPDF();
+      this.hideColumns = false;
+
+
+    }, 10);
+
 
   }
 

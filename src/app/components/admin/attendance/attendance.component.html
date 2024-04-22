@@ -39,11 +39,10 @@
         <thead>
           <tr>
             <th col="colspan">Name</th>
-            <th col="colspan" *ngIf="!hideColumns" [@fadeIn]>Phone number</th>
+            <!-- <th col="colspan" *ngIf="!hideColumns" [@fadeIn]>Phone number</th> -->
             <th col="colspan">Current status</th>
-            <th col="colspan">Department</th>
-            <th col="colspan">Check-In</th>
-            <th col="colspan">Check-Out</th>
+            <th col="colspan" width="100px">Department</th>
+            <th col="colspan">Time</th>
             <th col="colspan">Date</th>
           </tr>
         </thead>
@@ -59,13 +58,12 @@
               </span>
             </td>
 
-            <td *ngIf="!hideColumns" [@fadeIn]> {{attendance.user?.phoneNumber}} </td>
+            <!-- <td *ngIf="!hideColumns" [@fadeIn]> {{attendance.user?.phoneNumber}} </td> -->
             <td>
               <span class="font-weight-bold" [ngClass]="attendance.status === 'CHECK_IN' ? 'green-text' : 'red-text'">{{attendance.status.replace('_',' ')}}</span>
             </td>
             <td>{{attendance.user?.department}}</td>
-            <td>{{attendance.checkInTime | shortTime}}</td>
-            <td>{{attendance.checkOutTime | shortTime}}</td>
+            <td>{{attendance.checkInTime ?? attendance.checkOutTime | shortTime}}</td>
             <td>{{attendance.date === today ? 'Today' : attendance.date | date : 'MMM d, y'}}</td>
           </tr>
         </tbody>

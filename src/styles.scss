@@ -182,7 +182,7 @@ img::selection {
 // TABLE STYLING
 // ***************************
 
-.btn-add {
+.btn-add ,.btn-add-secondary{
   background-color: #FFA500;
   color: #3c4043;
   font-size: 0.9rem;
@@ -192,6 +192,11 @@ img::selection {
   i {
     margin-right: 5px;
   }
+}
+.btn-add-secondary{
+  background-color: #02086e;
+  color: #fff;
+  margin: 0 20px;
 }
 
 .table {
@@ -237,6 +242,11 @@ img::selection {
       .role {
         font-weight: 600;
         font-size: 0.85rem;
+      }
+
+      .text-muted{
+        color: #80868b;
+        font-size: 0.8rem;
       }
 
       .badge {

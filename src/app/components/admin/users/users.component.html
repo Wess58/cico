@@ -4,21 +4,25 @@
     <div class="d-flex justify-content-between">
       <h3 class="page-heading">Users</h3>
       <div class="">
-        <button class="btn btn-add" data-toggle="modal" data-target="#addUserModal" (click)="resetUser()"> <i class="fa-solid fa-plus"></i> Add user</button>
+        <button class="btn btn-add-secondary" data-toggle="modal" data-target="#addUserModal" (click)="resetUser()"> <i class="fa-solid fa-plus"></i> Add user</button>
+        <button class="btn btn-add" (click)="exportToPDF()"> <i class="fa-solid fa-download"></i> Download report</button>
+
       </div>
     </div>
 
     <div class="card white-bg-card">
-      <table class="table table-responsive-sm">
+      <table class="table table-responsive-sm" id="content">
         <thead>
           <tr>
             <th col="colspan">Name</th>
-            <th col="colspan">Phone number</th>
-            <th col="colspan">Email</th>
-            <th col="colspan">Gender</th>
+            <!-- <th col="colspan" *ngIf="!hideColumns" [@fadeIn]>Phone number</th> -->
+            <th col="colspan" *ngIf="!hideColumns" [@fadeIn]>Contact</th>
+            <!-- <th col="colspan">Gender</th> -->
             <th col="colspan">Department</th>
             <th col="colspan">Role</th>
-            <th col="colspan">Action</th>
+            <th col="colspan">Regular hours</th>
+            <th col="colspan">Overtime</th>
+            <th col="colspan" *ngIf="!hideColumns" [@fadeIn]>Action</th>
           </tr>
         </thead>
         <tbody *ngIf="users.length && !loadUsers" [@fadeIn]>
@@ -28,24 +32,32 @@
                 {{user.name}}
               </span>
 
-              <span class="redirect-link" [routerLink]="'/admin/attendance'" [queryParams]="{ idNumber:user.idNumber}">
+              <span *ngIf="!hideColumns" [@fadeIn] class="redirect-link" [routerLink]="'/admin/attendance'" [queryParams]="{ idNumber:user.idNumber}">
                 {{user.idNumber}}
               </span>
             </td>
 
-            <td>{{user.phoneNumber}}</td>
-            <td>{{user.email}}</td>
-            <td>{{user.gender}}</td>
-            <td>{{user.department}}</td>
+            <td *ngIf="!hideColumns" [@fadeIn]>
+              <span class="d-block mb-1">{{user.email}}</span>
+              <span class="d-block text-muted">{{user.phoneNumber | maskNumber}}</span>
+            </td>
+            <td>
+              <span class="d-block mb-1"> {{user.department === 'IT' ? user.department : user.department?.replace('_','-')}}</span>
+              <span class="d-block text-muted" *ngIf="!hideColumns" [@fadeIn]>{{user.gender | titlecase}}</span>
+            </td>
             <td>
               <span class="role" [ngClass]="user.role === 'ADMIN' ? 'orange-text' : 'green-text'">
                 {{user.role}}
               </span>
             </td>
-            <td>
-              <button class="btn btn-action mr-2" data-toggle="modal" data-target="#addUserModal" (click)="selectUser(user)"> edit </button>
+            <td>{{user?.totalWorkingHours | formatHours}}</td>
+            <td>{{user?.totalOvertimeHours| formatHours }}</td>
+
+            <td *ngIf="!hideColumns" [@fadeIn]>
+              <button class="btn btn-action mr-2" data-toggle="modal" data-target="#addUserModal" (click)="selectUser(user)"> <i class="fa-solid fa-user-pen"></i> </button>
               <button class="btn btn-delete" title="Delete user" data-toggle="modal" data-target="#deleteUserModal" (click)="selectUser(user)"> <i class="fa-solid fa-trash-can"></i> </button>
             </td>
+
 
           </tr>
         </tbody>

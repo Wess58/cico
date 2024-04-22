@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
     this.apiService.getOneUser(this.form.idNumber).subscribe(
       (res: any) => {
         // console.log(res);
-        if (res.body && res.body.password === this.form.password) {
+        if (res.body && res.body.role == 'ADMIN' && res.body.password === this.form.password) {
           localStorage.setItem('tkn', res.body.idNumber);
           this.router.navigate(['/admin/attendance']);
 

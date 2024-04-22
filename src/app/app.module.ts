@@ -18,6 +18,7 @@ import { NgmodelDebounceDirective } from './directives/ngmodel-debounce.directiv
 import { ShortTimePipe } from './pipes/short-time.pipe';
 import { MaskNumberPipe } from './pipes/mask-number.pipe';
 import { NavbarComponent } from './layouts/navbar/navbar.component';
+import { FormatHoursPipe } from './pipes/format-hours.pipe';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { NavbarComponent } from './layouts/navbar/navbar.component';
     NgmodelDebounceDirective,
     ShortTimePipe,
     MaskNumberPipe,
-    NavbarComponent
+    NavbarComponent,
+    FormatHoursPipe
   ],
   imports: [
     BrowserModule,

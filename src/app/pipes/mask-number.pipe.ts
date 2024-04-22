@@ -7,7 +7,7 @@ export class MaskNumberPipe implements PipeTransform {
 
   transform(value: string): any {
     if (value) {
-      const number:any = value.match(/(\d{4})(\d{3})(\d{3})/);
+      const number:any = value.match(/(\d{6})(\d{3})(\d{3})/);
       return value = number[1] + '***' + number[3];
     }
   }
