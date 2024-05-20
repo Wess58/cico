@@ -31,10 +31,14 @@ export class AttendanceComponent implements OnInit {
   totalItems = 0;
   filters: any = {
     // date: new Date().toISOString().slice(0, 10),
-    status: ''
+    status: '',
+    startDate: '2024-05-10'
   }
   today = new Date().toISOString().slice(0, 10);
+  timeNow = '';
   hideColumns = false;
+  users: any = [];
+
 
 
   constructor(
@@ -45,12 +49,15 @@ export class AttendanceComponent implements OnInit {
 
   ngOnInit(): void {
     window.scroll(0, 0);
+    this.timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+
     if (!localStorage.getItem('tkn')) {
       // localStorage.setItem('url', this.router.url);
       this.router.navigate(['/admin/login']);
     } else {
       this.filters.idNumber = this.activatedRoute.snapshot.queryParams['idNumber'] ?? '';
-      this.getAttendance();
+      this.filters.endDate = this.today;
+      this.getUsers();
     }
   }
 
@@ -64,7 +71,9 @@ export class AttendanceComponent implements OnInit {
       sort: 'id,desc',
       idNumber: this.filters.idNumber ?? '',
       date: this.filters.date ?? '',
-      status: this.filters.status ?? ''
+      status: this.filters.status ?? '',
+      startDate: this.filters.startDate,
+      endDate: this.filters.endDate
     }
 
     this.apiService.filterAttendance(options).subscribe(
@@ -73,12 +82,63 @@ export class AttendanceComponent implements OnInit {
         page ? window.scroll(0, 0) : '';
         this.totalItems = Number(res.headers.get('X-Total-Count'));
         this.loadAttendance = false;
-        this.attendanceList = res.body.filter((obj: any) => { return obj ?.user ?.name }) ?? [];
+        this.attendanceList = res.body.filter((obj: any) => { return obj ?.name }) ?? [];
+        this.attendanceList.forEach((attendance: any) => {
+          const userObj = this.users.find((user: any) => user.idNumber === attendance.idNumber);
+
+          attendance.attendances[0].checkOutTime = attendance.attendances[0].checkOutTime.substring(0, 5) ?? '';
+          attendance.attendances[0].checkInTime = attendance.attendances[0].checkInTime.substring(0, 5) ?? '';
+
+          const isOutPastFive = +(attendance.attendances[0].checkOutTime.substring(0, 2)) > 17;
+          const isOutBeforeFive = +(attendance.attendances[0].checkOutTime.substring(0, 2)) < 17;
+
+          const isInBeforeFive = +(attendance.attendances[0].checkInTime.substring(0, 2)) < 17;
+          const isInAfterFive = +(attendance.attendances[0].checkInTime.substring(0, 2)) > 17
+
+          // CAME IN DURING REGULAR WORKING HOURS BUT ALSO LEFT BEFORE FIVE -> WILL GET REGULAR HOURS
+          if (isInBeforeFive && isOutBeforeFive) {
+            const workingHoursMilliseconds = (new Date(attendance.date + "T" + (isOutBeforeFive ? attendance.attendances[0] ?.checkOutTime : '17:00')).getTime()) - (new Date(attendance.date + "T" + attendance.attendances[0].checkInTime)).getTime();
+            const workingHoursArray = (workingHoursMilliseconds / (1000 * 60 * 60)).toFixed(2).split('.');
+            const workingMinutesAray = (workingHoursMilliseconds / (1000 * 60)).toFixed(2).split('.');
+            attendance.workHours = (+workingMinutesAray[0] > 60 ? (workingHoursArray[0] + "h, " + String(+('0.' + workingHoursArray[1]) * 60) + ' mins') : (+workingMinutesAray[0] > 0 ? workingMinutesAray[0] : '1') + " mins");
+            attendance.overtime = '0 hours';
+          }
+
+          // CAME IN DURING REGULAR WORKING HOURS AND ALSO LEFT AFTER FIVE -> SHOULD BE GIVEN OVERTIME HOURS
+          if (!isInAfterFive && isOutPastFive) {
+            const overtimeMilliseconds = new Date(attendance.date + "T" + (attendance.attendances[0] ?.checkOutTime)).getTime() - new Date(attendance.date + "T17:00").getTime();
+            const overtimeHoursArray = (overtimeMilliseconds / (1000 * 60 * 60)).toFixed(2).split('.');
+            const overtimeMinutesArray = (overtimeMilliseconds / (1000 * 60)).toFixed(2).split('.');
+            attendance.overtime = (+overtimeMinutesArray[0] > 60 ? (overtimeHoursArray[0] + "h, " + String(+('0.' + overtimeHoursArray[1]) * 60) + ' mins') : (+overtimeMinutesArray[0] > 0 ? overtimeMinutesArray[0] : '1') + " mins");
+          }
+
+          // DOES NOT GET REGULAR WORKING HOURS
+          if (isInAfterFive) {
+            const overtimeMilliseconds = new Date(attendance.date + "T" + (attendance.attendances[0] ?.checkOutTime)).getTime() - new Date(attendance.date + "T" + attendance.attendances[0].checkInTime).getTime();
+            const overtimeHoursArray = (overtimeMilliseconds / (1000 * 60 * 60)).toFixed(2).split('.');
+            const overtimeMinutesArray = (overtimeMilliseconds / (1000 * 60)).toFixed(2).split('.');
+            attendance.overtime = (+overtimeMinutesArray[0] > 60 ? (overtimeHoursArray[0] + "h, " + String(+('0.' + overtimeHoursArray[1]) * 60) + ' mins') : overtimeMinutesArray[0] + " mins");
+            attendance.workHours = '0 hours';
+          }
+
+          attendance.user = { ...attendance, ...userObj };
+        });
 
       },
       (error: any) => {
         // console.log(error);
         this.loadAttendance = false;
+      }
+    )
+  }
+
+  getUsers(): void {
+    this.loadAttendance = true;
+    this.apiService.getUsers().subscribe(
+      (res: any) => {
+        // console.log(res);
+        this.users = res.body ?? [];
+        this.getAttendance();
       }
     )
   }
@@ -122,9 +182,9 @@ export class AttendanceComponent implements OnInit {
     setTimeout(() => {
       let doc: any = new jsPDF();
 
-      const img:any = new Image();
+      const img: any = new Image();
       img.src = 'assets/images/logo-wordmark.png';
-      doc.addImage(img, 'png', 14, 2, 30,10)
+      doc.addImage(img, 'png', 14, 2, 30, 10)
       doc.setFontSize(14);
       doc.text(14, 20, 'NON-CONTRACTORS ATTENDANCE REPORT');
 
@@ -133,7 +193,7 @@ export class AttendanceComponent implements OnInit {
         {
           startY: 25,
           html: '#content',
-          headStyles :{fillColor : [2, 8, 110]},
+          headStyles: { fillColor: [2, 8, 110] },
           theme: 'grid'
         });
 
@@ -145,6 +205,7 @@ export class AttendanceComponent implements OnInit {
 
 
     }, 10);
+
 
 
   }

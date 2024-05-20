@@ -12,7 +12,7 @@ export class ApiService {
   constructor(private httpClient: HttpClient) { }
 
   filterAttendance(options: any): Observable<any> {
-    return this.httpClient.get<any>(this.baseUrl + '/filter', {
+    return this.httpClient.get<any>(this.baseUrl + '/report', {
       observe: 'response',
       params: options,
     });
