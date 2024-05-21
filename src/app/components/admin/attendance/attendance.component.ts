@@ -86,18 +86,20 @@ export class AttendanceComponent implements OnInit {
         this.attendanceList.forEach((attendance: any) => {
           const userObj = this.users.find((user: any) => user.idNumber === attendance.idNumber);
 
-          attendance.attendances[0].checkOutTime = attendance.attendances[0].checkOutTime.substring(0, 5) ?? '';
+          attendance.attendances[0].checkOutTime = attendance?.attendances[0]?.checkOutTime?.substring(0, 5) ?? '';
           attendance.attendances[0].checkInTime = attendance.attendances[0].checkInTime.substring(0, 5) ?? '';
 
           const isOutPastFive = +(attendance.attendances[0].checkOutTime.substring(0, 2)) > 17;
           const isOutBeforeFive = +(attendance.attendances[0].checkOutTime.substring(0, 2)) < 17;
 
           const isInBeforeFive = +(attendance.attendances[0].checkInTime.substring(0, 2)) < 17;
-          const isInAfterFive = +(attendance.attendances[0].checkInTime.substring(0, 2)) > 17
+          const isInAfterFive = +(attendance.attendances[0].checkInTime.substring(0, 2)) > 17;
+          const isStillAtWork = !attendance.attendances[0].checkOutTime;
+
 
           // CAME IN DURING REGULAR WORKING HOURS BUT ALSO LEFT BEFORE FIVE -> WILL GET REGULAR HOURS
           if (isInBeforeFive && isOutBeforeFive) {
-            const workingHoursMilliseconds = (new Date(attendance.date + "T" + (isOutBeforeFive ? attendance.attendances[0] ?.checkOutTime : '17:00')).getTime()) - (new Date(attendance.date + "T" + attendance.attendances[0].checkInTime)).getTime();
+            const workingHoursMilliseconds = (new Date(attendance.date + "T" + (isOutBeforeFive && attendance.attendances[0] ?.checkOutTime ? attendance.attendances[0] ?.checkOutTime : isStillAtWork ? this.timeNow : '17:00')).getTime()) - (new Date(attendance.date + "T" + attendance.attendances[0].checkInTime)).getTime();
             const workingHoursArray = (workingHoursMilliseconds / (1000 * 60 * 60)).toFixed(2).split('.');
             const workingMinutesAray = (workingHoursMilliseconds / (1000 * 60)).toFixed(2).split('.');
             attendance.workHours = (+workingMinutesAray[0] > 60 ? (workingHoursArray[0] + "h, " + String(+('0.' + workingHoursArray[1]) * 60) + ' mins') : (+workingMinutesAray[0] > 0 ? workingMinutesAray[0] : '1') + " mins");
@@ -123,6 +125,12 @@ export class AttendanceComponent implements OnInit {
 
           attendance.user = { ...attendance, ...userObj };
         });
+
+
+
+        setTimeout(() => {
+          this.attendanceList.sort((a: any, b: any) => b.date.localeCompare(a.date));
+        }, 100);
 
       },
       (error: any) => {
