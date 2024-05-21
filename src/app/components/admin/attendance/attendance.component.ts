@@ -95,11 +95,12 @@ export class AttendanceComponent implements OnInit {
           const isInBeforeFive = +(attendance.attendances[0].checkInTime.substring(0, 2)) < 17;
           const isInAfterFive = +(attendance.attendances[0].checkInTime.substring(0, 2)) > 17;
           const isStillAtWork = !attendance.attendances[0].checkOutTime;
+          const nowIsNotPastFive = +(this.timeNow.substring(0, 2)) < 17;
 
 
           // CAME IN DURING REGULAR WORKING HOURS BUT ALSO LEFT BEFORE FIVE -> WILL GET REGULAR HOURS
           if (isInBeforeFive && isOutBeforeFive) {
-            const workingHoursMilliseconds = (new Date(attendance.date + "T" + (isOutBeforeFive && attendance.attendances[0] ?.checkOutTime ? attendance.attendances[0] ?.checkOutTime : isStillAtWork ? this.timeNow : '17:00')).getTime()) - (new Date(attendance.date + "T" + attendance.attendances[0].checkInTime)).getTime();
+            const workingHoursMilliseconds = (new Date(attendance.date + "T" + (isOutBeforeFive && attendance.attendances[0] ?.checkOutTime ? attendance.attendances[0] ?.checkOutTime : isStillAtWork && nowIsNotPastFive ? this.timeNow : '17:00')).getTime()) - (new Date(attendance.date + "T" + attendance.attendances[0].checkInTime)).getTime();
             const workingHoursArray = (workingHoursMilliseconds / (1000 * 60 * 60)).toFixed(2).split('.');
             const workingMinutesAray = (workingHoursMilliseconds / (1000 * 60)).toFixed(2).split('.');
             attendance.workHours = (+workingMinutesAray[0] > 60 ? (workingHoursArray[0] + "h, " + String(+('0.' + workingHoursArray[1]) * 60) + ' mins') : (+workingMinutesAray[0] > 0 ? workingMinutesAray[0] : '1') + " mins");
@@ -108,13 +109,13 @@ export class AttendanceComponent implements OnInit {
 
           // CAME IN DURING REGULAR WORKING HOURS AND ALSO LEFT AFTER FIVE -> SHOULD BE GIVEN OVERTIME HOURS
           if (!isInAfterFive && isOutPastFive) {
-            const overtimeMilliseconds = new Date(attendance.date + "T" + (attendance.attendances[0] ?.checkOutTime)).getTime() - new Date(attendance.date + "T17:00").getTime();
+            const overtimeMilliseconds = new Date(attendance.date + "T" + ( isStillAtWork && !nowIsNotPastFive ? this.timeNow : attendance.attendances[0] ?.checkOutTime)).getTime() - new Date(attendance.date + "T17:00").getTime();
             const overtimeHoursArray = (overtimeMilliseconds / (1000 * 60 * 60)).toFixed(2).split('.');
             const overtimeMinutesArray = (overtimeMilliseconds / (1000 * 60)).toFixed(2).split('.');
             attendance.overtime = (+overtimeMinutesArray[0] > 60 ? (overtimeHoursArray[0] + "h, " + String(+('0.' + overtimeHoursArray[1]) * 60) + ' mins') : (+overtimeMinutesArray[0] > 0 ? overtimeMinutesArray[0] : '1') + " mins");
           }
 
-          // DOES NOT GET REGULAR WORKING HOURS
+          // DID NOT COME IN DURING REGULAR WORKING HOURS -> DOES NOT GET REGULAR WORKING HOURS
           if (isInAfterFive) {
             const overtimeMilliseconds = new Date(attendance.date + "T" + (attendance.attendances[0] ?.checkOutTime)).getTime() - new Date(attendance.date + "T" + attendance.attendances[0].checkInTime).getTime();
             const overtimeHoursArray = (overtimeMilliseconds / (1000 * 60 * 60)).toFixed(2).split('.');
